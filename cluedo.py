@@ -6,7 +6,11 @@ from sys import exit
 import random
 
 class Room(object):
-    pass
+
+    def enter(self):
+        print("This scene is not yet configured.")
+        print("Subclass it and implement enter().")
+        exit(1)
 
 class Kitchen(Room):
     pass
@@ -32,10 +36,10 @@ class Library(Room):
 class Study(Room):
     pass
 
-class Hall(Room):
+class Lobby(Room):
 
     def enter(self):
-        print(f"You follow the butler into the Hall, where you meet the guests.")
+        print(f"You follow the butler into the Lobby, where you meet the guests.")
         print(f"You can't help but get the feeling something's not quite right though.")
         print(f"Everyone's either avoiding eye contact or nervously shuffling about.")
         print(f"To be expected, you suppose.\n")
@@ -48,6 +52,9 @@ class Hall(Room):
         print('\n')
         input("> Where do you want to go? ")
 
+class Hallway(Room):
+    pass
+
 class Lounge(Room):
     pass
 
@@ -56,11 +63,35 @@ class DiningRoom(Room):
 
 class Engine(object):
 
-    def openingScene(self, room_name):
-        pass
+    def pickRoom(self):
+        #dictionary with the calls we'll need to move to a new room
+        roomsDictionary = {'Kitchen': Kitchen(),
+                           'Ballroom': Ballroom(),
+                           'Conservatory': Conservatory(),
+                           'Dining Room': DiningRoom(),
+                           'Cellar': Cellar(),
+                           'Billiard Room': BilliardRoom(),
+                           'Library': Library(),
+                           'Study': Study(),
+                           'Lounge': Lounge()}
 
-    def nextRoom(self):
-        pass
+        #converting the dictionary to a list
+        roomsList = []
+
+        for keys in roomsDictionary.keys():
+            roomsList.append(keys)
+
+        #get the user's room choice
+        roomChoice = input("> Where do you want to go? Choose from from one of the below:\n" + str(CluedoRooms.rooms) + "\n> ")
+
+        #Make sure the user's room choice is in the rooms list
+        while roomChoice not in roomsList:
+            roomChoice = input("> That doesn't look right. Choose from from one of the below:\n" + str(CluedoRooms.rooms) + "\n> ")
+        else:
+            nextRoom = roomsDictionary.get(roomChoice)
+
+        #move to the next room
+        return nextRoom
 
     def makeAGuess(self, playerCards, NPCCards):
         #pass the dealt cards through
@@ -213,5 +244,8 @@ playerCards = list(cards[0])
 #Get the NPC's cards
 NPCCards = list(cards[1])
 
+print(f"You spoke to a few of the other detectives, and they've given you some pretty solid evidence already.\nYou can, with some certainty, rule out the following things:\n{playerCards}")
+
 start = Engine()
-start.makeAGuess(playerCards, NPCCards)
+#start.makeAGuess(playerCards, NPCCards)
+start.pickRoom()
