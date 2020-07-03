@@ -4,6 +4,8 @@ import CluedoRooms
 import CluedoWeapons
 from sys import exit
 import random
+from textwrap import dedent
+import time
 
 class Room(object):
 
@@ -39,6 +41,18 @@ class Study(Room):
 class Lobby(Room):
 
     def enter(self):
+        print(f"*KNOCK KNOCK KNOCK*")
+
+        print(dedent('''
+                You're greeted by a
+                Oh my - thank God you've arrived!
+
+                I'm Jeeves, the butler at this fine establishment. There's been a terrible accident.
+
+                You see, one of our guests... Mr. Body. He's been murdered! It's positively ghastly!
+                '''))
+
+
         print(f"You follow the butler into the Lobby, where you meet the guests.")
         print(f"You can't help but get the feeling something's not quite right though.")
         print(f"Everyone's either avoiding eye contact or nervously shuffling about.")
@@ -91,7 +105,7 @@ class Engine(object):
             nextRoom = roomsDictionary.get(roomChoice)
 
         #move to the next room
-        return nextRoom
+        nextRoom.enter()
 
     def makeAGuess(self, playerCards, NPCCards):
         #pass the dealt cards through
@@ -164,23 +178,28 @@ class Engine(object):
 class setUpGame(object):
 
     def setUpMurder(self):
-        print("Murdering...")
+        murdering = "Murdering..."
+
+        for i in range(len(murdering)):
+            print(murdering[i], end='', flush=True);
+            time.sleep(0.2)
+
         # Assign a random murderer from the available characters
-        murderer = CluedoCards.characters[random.randint(0,len(CluedoCards.characters))]
-        print(f"{murderer}")
+        murderer = CluedoCards.characters[random.randint(0,len(CluedoCards.characters)-1)]
+        print(f"\n{murderer}")
         # Remove the murderer from the deck
         CluedoCards.characters.remove(str(murderer))
 #        print(f"{CluedoCards.characters}")
 
         # Assign a random weapon from the available weapons
-        weapon = CluedoCards.weapons[random.randint(0,len(CluedoCards.weapons))]
+        weapon = CluedoCards.weapons[random.randint(0,len(CluedoCards.weapons)-1)]
         print(f"{weapon}")
         # Remove the weapon from the deck
         CluedoCards.weapons.remove(str(weapon))
 #        print(f"{CluedoCards.weapons}")
 
         # Assign a random room from the available rooms
-        room = CluedoCards.rooms[random.randint(0,len(CluedoCards.rooms))]
+        room = CluedoCards.rooms[random.randint(0,len(CluedoCards.rooms)-1)]
         print(f"{room}")
         # Remove the weapon from the deck
         CluedoCards.rooms.remove(str(room))
@@ -193,7 +212,7 @@ class setUpGame(object):
         playerCards = []
         NPCCards = []
 
-        numPlayers = range(int(input("> How many players? ")))
+        numPlayers = range(int(input("> How many players do you want to play against? ")))
 
         i = 0
 
@@ -216,7 +235,25 @@ class setUpGame(object):
         #print(f"{playerCards}")
         #print(f"{NPCCards}")
 
-        return playerCards, NPCCards
+        print("Lovely!")
+        progress = input("> Ready to start? Type Y or N\n")
+
+        if progress == "Y":
+            print(f"\n.....................................\n")
+            return playerCards, NPCCards
+        elif progress == "N":
+            print(f"Guess the murder isn't getting solved then! Nice knowing you!")
+            exit(1)
+        else:
+            print(f"That doesn't look quite right.")
+            progress = input("> Type Y or N\n")
+
+            if progress == "Y":
+                print(f"\n.....................................\n")
+                return playerCards, NPCCards
+            else:
+                print(f"Guess the murder isn't getting solved then! Nice knowing you!")
+                exit(1)
 
 #print(f"Glad you could join us, but terribly sorry it had to be under these circumstances)
 
@@ -244,8 +281,33 @@ playerCards = list(cards[0])
 #Get the NPC's cards
 NPCCards = list(cards[1])
 
+print(dedent("""
+             There's a dense fog in the air as you approach the manor.
+             Nightmare Inn, you think he called it on the phone. Accurate.
+             Gates of rusted iron burst open, and so you begin the approach towards the door.
+             Knotted branches of trees line the drive on the way up, illuminated by occasional flashes of lightning.
+             Looking over to the manor, you can see what looks like the remnants of a dinner party. A silent, rather unlively one at that.
+             """))
+
+knock = input("> Are you ready to knock on the door? Y/N\n")
+
+if knock == "Y":
+    firstScene = Lobby()
+    firstScene.enter()
+elif knock == "N":
+    print(f"Well... I guess this murder will go unsolved then. Some investigator you are.")
+else:
+    print(f"That doesn't look quite right. Type Y or N.")
+    knock = input("> Are you ready to knock on the door? Type Y or N\n")
+    if knock == "Y":
+        firstScene = Lobby()
+        firstScene.enter()
+    else:
+        print(f"Well... I guess this murder will go unsolved then. Some investigator you are.")
+
+
 print(f"You spoke to a few of the other detectives, and they've given you some pretty solid evidence already.\nYou can, with some certainty, rule out the following things:\n{playerCards}")
 
 start = Engine()
 #start.makeAGuess(playerCards, NPCCards)
-start.pickRoom()
+nextRoom = start.pickRoom()
