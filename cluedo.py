@@ -32,7 +32,39 @@ class Kitchen(Room):
     pass
 
 class Ballroom(Room):
-    pass
+
+    def enter(self):
+        print(f"\n.....................................\n")
+
+        sceneSetting = ["The ballroom's dank and clearly hasn't been given any attention in decades.",
+                        "You can't see any open windows, but a musty chandelier jangles as the breeze from outside finds its way in.",
+                        "There's a dust coated Baby Grand in the corner, and you just can't help yourself..."]
+
+        for i in range(len(sceneSetting)):
+            print(textwrap.fill(sceneSetting[i], 60))
+
+        time.sleep(5)
+
+        numPlinks = 3
+        start = 0
+
+        print("\n")
+
+        while start < numPlinks:
+            print(f"*PLINK*")
+            time.sleep(1)
+            start += 1
+
+        time.sleep(2)
+
+        print(f"\nBut you didn't come here to play piano, you came to solve a murder.\n")
+
+        time.sleep(2)
+
+        roomName = 'Ballroom'
+
+        guess = Engine()
+        guess.makeAGuess(playerCards, NPCCards, roomName)
 
 class Conservatory(Room):
     pass
@@ -57,7 +89,7 @@ class Lobby(Room):
     def enter(self):
         #enter the lobby, start the door knock as part of story progression
         print(f"\n.....................................")
-        knock = 'KNOCK'
+        #knock = 'KNOCK'
         numKnocks = 3
         start = 0
 
@@ -116,7 +148,7 @@ class Hallway(Room):
         print(f"\n.....................................\n")
 
         hallwayIntros = ["The hallways are eerily silent, aside from the faint whispers of the guests. You have a job to do though, so you're pushing on.\n",
-                         "You head to the hallway of the manor. The whole place is stately, and not particularly welcoming.\n"]
+                         "You head over to the hallway. The whole place has a stately air, but it's not welcoming in any way, shape or form. You'll be glad to leave this place soon.\n"]
 
         intro = hallwayIntros[random.randint(0,len(hallwayIntros)-1)]
         print(textwrap.fill(intro, 60))
@@ -162,15 +194,16 @@ class Engine(object):
             #move to the next room
             nextRoom.enter()
 
-    def makeAGuess(self, playerCards, NPCCards):
+    def makeAGuess(self, playerCards, NPCCards, roomName):
         #pass the dealt cards through
         self.playerCards = playerCards
         self.NPCCards = NPCCards
+        self.roomName = roomName
 
         # check the NPCCards are carried through properly
         #print(NPCCards)
 
-        murdererGuess = input("> Who do you think did it?\n" + "Choose from one of the following: \n" + str(CluedoCharacters.characters) + "\n> ")
+        murdererGuess = input("\n> Who do you think did it?\n" + "Choose from one of the following: \n" + str(CluedoCharacters.characters) + "\n> ")
 
         if murdererGuess in CluedoCharacters.characters:
             pass
@@ -179,7 +212,7 @@ class Engine(object):
             print(f"{CluedoCharacters.characters}")
             murdererGuess = input("> Out of these folks, who do you think did it? ")
 
-        weaponGuess = input("> Which weapon do you think they used?\n" + "Choose from one of the following: \n" + str(CluedoWeapons.weapons) + "\n> ")
+        weaponGuess = input("\n> Which weapon do you think they used?\n" + "Choose from one of the following: \n" + str(CluedoWeapons.weapons) + "\n> ")
 
         if weaponGuess in CluedoWeapons.weapons:
             pass
@@ -188,22 +221,22 @@ class Engine(object):
             print(f"{CluedoWeapons.weapons}")
             weaponGuess = input("> Out of these folks, which do you think is the weapon? ")
 
-        roomGuess = input("> And where do you think they did it?\n" + "Choose from one of the following: \n" + str(CluedoRooms.rooms) + "\n> ")
+#        roomGuess = input("> And where do you think they did it?\n" + "Choose from one of the following: \n" + str(CluedoRooms.rooms) + "\n> ")
+#
+#        if roomGuess in CluedoRooms.rooms:
+#            pass
+#        else:
+#            print(f"That doesn't look quite right. Rememember, these are the options: ")
+#            print(f"{CluedoRooms.rooms}")
+#            roomGuess = input("> Where do you think the murder happened? ")
 
-        if roomGuess in CluedoRooms.rooms:
-            pass
-        else:
-            print(f"That doesn't look quite right. Rememember, these are the options: ")
-            print(f"{CluedoRooms.rooms}")
-            roomGuess = input("> Where do you think the murder happened? ")
-
-        print(f"So you think {murdererGuess} did it, with the {weaponGuess} in the {roomGuess}. Let's see!")
+        print(f"\nSo you think {murdererGuess} did it, with the {weaponGuess} in the {roomName}. Let's see!")
 
         #create a list with the user's guess
         guess = []
         guess.append(murdererGuess)
         guess.append(weaponGuess)
-        guess.append(roomGuess)
+        guess.append(roomName)
 
         #check the list creation for the guess is working correctly
         #print(guess)
@@ -221,7 +254,7 @@ class Engine(object):
             else:
                 i = i + 1
         else:
-            print(f"Your opponents have the following cards:\n{matches}")
+            print(f"\nYour opponents have the following cards:\n{matches}")
 
     def accuse(self, murdererGuess, roomGuess, weaponGuess):
         self.murdererGuess = murdererGuess
