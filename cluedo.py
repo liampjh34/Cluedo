@@ -4,10 +4,22 @@ import CluedoRooms
 import CluedoWeapons
 from sys import exit
 import random
-from textwrap import dedent
+import textwrap
+from textwrap import dedent, indent
 import time
 
+class earlyFinishes(object):
+    earlyFinishes = ["Well... I guess that's it then. Some investigator you are.",
+                     "I suppose that's it then. Bye.",
+                     "Where did you go to investigator school? Bye Felicia.",
+                     "+1 unsolved murder then. You lose."]
+
 class Room(object):
+
+    def __init__(self, playerCards, NPCCards):
+        #pass the dealt cards through
+        self.playerCards = playerCards
+        self.NPCCards = NPCCards
 
     def enter(self):
         print("This scene is not yet configured.")
@@ -41,33 +53,63 @@ class Study(Room):
 class Lobby(Room):
 
     def enter(self):
-        print(f"*KNOCK KNOCK KNOCK*")
+        print(f"\n.....................................")
+        knock = 'KNOCK'
+        numKnocks = 3
+        start = 0
 
-        print(dedent('''
-                You're greeted by a
-                Oh my - thank God you've arrived!
+        print("\n")
 
-                I'm Jeeves, the butler at this fine establishment. There's been a terrible accident.
+        while start < numKnocks:
+            print(f"*KNOCK*")
+            time.sleep(1)
+            start += 1
 
-                You see, one of our guests... Mr. Body. He's been murdered! It's positively ghastly!
-                '''))
+        time.sleep(1)
 
+        print(f"\nThere's a faint sound of footsteps approaching...")
 
-        print(f"You follow the butler into the Lobby, where you meet the guests.")
-        print(f"You can't help but get the feeling something's not quite right though.")
-        print(f"Everyone's either avoiding eye contact or nervously shuffling about.")
-        print(f"To be expected, you suppose.\n")
-        print(f"But anyway! You have a job to do. There's 11 rooms in front of you:\n")
+        time.sleep(3)
 
-        for i in CluedoCards.rooms:
+        print(f"\nThe person who greets you has clearly seen better days. Aghast, dishevelled, beside themselves.\n")
 
-            print(f"- {i}")
+        time.sleep(5)
 
-        print('\n')
-        input("> Where do you want to go? ")
+        print(f"BUTLER:")
+
+        butlerDialogue = """Oh my - thank God you've arrived! I'm Jeeves, the butler at this fine establishment. There's been a terrible accident. You see, one of our guests... Mr. Body. He's been murdered! It's positively ghastly!\n"""
+
+        print(textwrap.fill(butlerDialogue, 60, initial_indent='        ', subsequent_indent='      '))
+
+        progress = input("\n> Are you ready to start investigating? Y/N\n")
+
+        if progress == "Y":
+            print(f"\nYou have a private chat with the butler before going any further.\nYou can, with some certainty, rule out the following things:\n{playerCards}")
+            nextScene = Hallway(playerCards, NPCCards)
+            nextScene.enter()
+        elif progress == "N":
+            quip = earlyFinishes()
+            quip = quip.earlyFinishes[random.randint(0,len(quip.earlyFinishes)-1)]
+            print(f"{quip}")
+        else:
+            print("That doesn't look quite right. Type Y or N")
+            progress = input("> Are you ready to start investigating? Y/N\n")
+            if progress == "Y":
+                print(f"\nYou have a private chat with the butler before going any further.\nYou can, with some certainty, rule out the following things:\n{playerCards}")
+                nextScene = Hallway(playerCards, NPCCards)
+                nextScene.enter()
+            else:
+                quip = earlyFinishes()
+                quip = quip.earlyFinishes[random.randint(0,len(quip.earlyFinishes)-1)]
+                print(f"{quip}")
+
+        #print(f"You spoke to a few of the other detectives, and they've given you some pretty solid evidence already.\nYou can, with some certainty, rule out the following things:\n{playerCards}")
 
 class Hallway(Room):
-    pass
+
+    def enter(self):
+        print(f"\n.....................................")
+
 
 class Lounge(Room):
     pass
@@ -104,8 +146,8 @@ class Engine(object):
         else:
             nextRoom = roomsDictionary.get(roomChoice)
 
-        #move to the next room
-        nextRoom.enter()
+            #move to the next room
+            nextRoom.enter()
 
     def makeAGuess(self, playerCards, NPCCards):
         #pass the dealt cards through
@@ -281,18 +323,18 @@ playerCards = list(cards[0])
 #Get the NPC's cards
 NPCCards = list(cards[1])
 
-print(dedent("""
-             There's a dense fog in the air as you approach the manor.
-             Nightmare Inn, you think he called it on the phone. Accurate.
-             Gates of rusted iron burst open, and so you begin the approach towards the door.
-             Knotted branches of trees line the drive on the way up, illuminated by occasional flashes of lightning.
-             Looking over to the manor, you can see what looks like the remnants of a dinner party. A silent, rather unlively one at that.
-             """))
+sceneSetting = []
+sceneSetting = ["There's a dense fog in the air as you approach the manor. Nightmare Inn, you think he called it on the phone. Accurate.",
+                "Gates of rusted iron burst open, and so you begin the approach towards the door. Knotted branches of trees line the drive on the way up, illuminated by occasional flashes of lightning.",
+                "Looking over to the manor, you can see what looks like the remnants of a dinner party. A silent, rather unlively one at that."]
 
-knock = input("> Are you ready to knock on the door? Y/N\n")
+for i in range(len(sceneSetting)):
+    print(textwrap.fill(sceneSetting[i], 60))
+
+knock = input("\n> Are you ready to knock on the door? Y/N\n")
 
 if knock == "Y":
-    firstScene = Lobby()
+    firstScene = Lobby(playerCards, NPCCards)
     firstScene.enter()
 elif knock == "N":
     print(f"Well... I guess this murder will go unsolved then. Some investigator you are.")
@@ -300,14 +342,11 @@ else:
     print(f"That doesn't look quite right. Type Y or N.")
     knock = input("> Are you ready to knock on the door? Type Y or N\n")
     if knock == "Y":
-        firstScene = Lobby()
+        firstScene = Lobby(playerCards, NPCCards)
         firstScene.enter()
     else:
         print(f"Well... I guess this murder will go unsolved then. Some investigator you are.")
 
-
-print(f"You spoke to a few of the other detectives, and they've given you some pretty solid evidence already.\nYou can, with some certainty, rule out the following things:\n{playerCards}")
-
-start = Engine()
+#start = Engine()
 #start.makeAGuess(playerCards, NPCCards)
-nextRoom = start.pickRoom()
+#nextRoom = start.pickRoom()
