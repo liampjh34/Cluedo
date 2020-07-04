@@ -9,6 +9,7 @@ from textwrap import dedent, indent
 import time
 
 class earlyFinishes(object):
+    #A selection of messages to be given to the user, should they choose not to proceed
     earlyFinishes = ["Well... I guess that's it then. Some investigator you are.",
                      "I suppose that's it then. Bye.",
                      "Where did you go to investigator school? Bye Felicia.",
@@ -17,11 +18,12 @@ class earlyFinishes(object):
 class Room(object):
 
     def __init__(self, playerCards, NPCCards):
-        #pass the dealt cards through
+        #set up arguments for passing through player cards and NPC cards, as some rooms need to inherit these values
         self.playerCards = playerCards
         self.NPCCards = NPCCards
 
     def enter(self):
+        #An error message to be displayed in case a room has not been set up properly
         print("This scene is not yet configured.")
         print("Subclass it and implement enter().")
         exit(1)
@@ -53,6 +55,7 @@ class Study(Room):
 class Lobby(Room):
 
     def enter(self):
+        #enter the lobby, start the door knock as part of story progression
         print(f"\n.....................................")
         knock = 'KNOCK'
         numKnocks = 3
@@ -83,11 +86,14 @@ class Lobby(Room):
 
         progress = input("\n> Are you ready to start investigating? Y/N\n")
 
+        #options based on user input
         if progress == "Y":
             print(f"\nYou have a private chat with the butler before going any further.\nYou can, with some certainty, rule out the following things:\n{playerCards}")
+            print(f"\nYou'll probably want to keep a note of these. They're your cards.")
             nextScene = Hallway(playerCards, NPCCards)
             nextScene.enter()
         elif progress == "N":
+            #call the list of early finish options, declared at the start of the code
             quip = earlyFinishes()
             quip = quip.earlyFinishes[random.randint(0,len(quip.earlyFinishes)-1)]
             print(f"{quip}")
@@ -96,6 +102,7 @@ class Lobby(Room):
             progress = input("> Are you ready to start investigating? Y/N\n")
             if progress == "Y":
                 print(f"\nYou have a private chat with the butler before going any further.\nYou can, with some certainty, rule out the following things:\n{playerCards}")
+                print(f"\nYou'll probably want to keep a note of these. They're your cards.")
                 nextScene = Hallway(playerCards, NPCCards)
                 nextScene.enter()
             else:
@@ -103,13 +110,12 @@ class Lobby(Room):
                 quip = quip.earlyFinishes[random.randint(0,len(quip.earlyFinishes)-1)]
                 print(f"{quip}")
 
-        #print(f"You spoke to a few of the other detectives, and they've given you some pretty solid evidence already.\nYou can, with some certainty, rule out the following things:\n{playerCards}")
-
 class Hallway(Room):
 
     def enter(self):
         print(f"\n.....................................")
-
+        #simple room, to pick other rooms to go to
+        #create a list to keep it fresh
 
 class Lounge(Room):
     pass
@@ -323,16 +329,19 @@ playerCards = list(cards[0])
 #Get the NPC's cards
 NPCCards = list(cards[1])
 
+#opening scene for the game
 sceneSetting = []
 sceneSetting = ["There's a dense fog in the air as you approach the manor. Nightmare Inn, you think he called it on the phone. Accurate.",
                 "Gates of rusted iron burst open, and so you begin the approach towards the door. Knotted branches of trees line the drive on the way up, illuminated by occasional flashes of lightning.",
                 "Looking over to the manor, you can see what looks like the remnants of a dinner party. A silent, rather unlively one at that."]
 
+#print the sceneSetting variable from a list, as the textwrap function below doesn't enforce \n for new lines. Each item in the list prints on a new line instead.
 for i in range(len(sceneSetting)):
     print(textwrap.fill(sceneSetting[i], 60))
 
 knock = input("\n> Are you ready to knock on the door? Y/N\n")
 
+#options for story progression
 if knock == "Y":
     firstScene = Lobby(playerCards, NPCCards)
     firstScene.enter()
