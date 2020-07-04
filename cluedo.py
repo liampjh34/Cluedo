@@ -113,9 +113,16 @@ class Lobby(Room):
 class Hallway(Room):
 
     def enter(self):
-        print(f"\n.....................................")
-        #simple room, to pick other rooms to go to
-        #create a list to keep it fresh
+        print(f"\n.....................................\n")
+
+        hallwayIntros = ["The hallways are eerily silent, aside from the faint whispers of the guests. You have a job to do though, so you're pushing on.\n",
+                         "You head to the hallway of the manor. The whole place is stately, and not particularly welcoming.\n"]
+
+        intro = hallwayIntros[random.randint(0,len(hallwayIntros)-1)]
+        print(textwrap.fill(intro, 60))
+
+        nextRoom = Engine()
+        nextRoom.pickRoom()
 
 class Lounge(Room):
     pass
@@ -127,15 +134,15 @@ class Engine(object):
 
     def pickRoom(self):
         #dictionary with the calls we'll need to move to a new room
-        roomsDictionary = {'Kitchen': Kitchen(),
-                           'Ballroom': Ballroom(),
-                           'Conservatory': Conservatory(),
-                           'Dining Room': DiningRoom(),
-                           'Cellar': Cellar(),
-                           'Billiard Room': BilliardRoom(),
-                           'Library': Library(),
-                           'Study': Study(),
-                           'Lounge': Lounge()}
+        roomsDictionary = {'Kitchen': Kitchen(playerCards, NPCCards),
+                           'Ballroom': Ballroom(playerCards, NPCCards),
+                           'Conservatory': Conservatory(playerCards, NPCCards),
+                           'Dining Room': DiningRoom(playerCards, NPCCards),
+                           'Cellar': Cellar(playerCards, NPCCards),
+                           'Billiard Room': BilliardRoom(playerCards, NPCCards),
+                           'Library': Library(playerCards, NPCCards),
+                           'Study': Study(playerCards, NPCCards),
+                           'Lounge': Lounge(playerCards, NPCCards)}
 
         #converting the dictionary to a list
         roomsList = []
@@ -144,11 +151,11 @@ class Engine(object):
             roomsList.append(keys)
 
         #get the user's room choice
-        roomChoice = input("> Where do you want to go? Choose from from one of the below:\n" + str(CluedoRooms.rooms) + "\n> ")
+        roomChoice = input("\n> Where do you want to go? Choose from from one of the below:\n" + str(CluedoRooms.rooms) + "\n> ")
 
         #Make sure the user's room choice is in the rooms list
         while roomChoice not in roomsList:
-            roomChoice = input("> That doesn't look right. Choose from from one of the below:\n" + str(CluedoRooms.rooms) + "\n> ")
+            roomChoice = input("\n> That doesn't look right. Choose from from one of the below:\n" + str(CluedoRooms.rooms) + "\n> ")
         else:
             nextRoom = roomsDictionary.get(roomChoice)
 
