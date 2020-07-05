@@ -29,19 +29,30 @@ class Room(object):
         exit(1)
 
 class Kitchen(Room):
-    pass
+
+    def enter(self):
+        print(f"\n.....................................\n")
+
+        sceneSetting = "You wouldn't know there'd been a dinner party this evening, if you looked at the Kitchen at least. There's plenty of potentially suspicious items in this room though, so you get to work. "
+
+        print(textwrap.fill(sceneSetting, 60))
+
+        time.sleep(5)
+
+        roomName = 'Kitchen'
+
+        guess = Engine()
+        guess.makeAGuess(playerCards, NPCCards, roomName)
+        guess.pickRoom()
 
 class Ballroom(Room):
 
     def enter(self):
         print(f"\n.....................................\n")
 
-        sceneSetting = ["The ballroom's dank and clearly hasn't been given any attention in decades.",
-                        "You can't see any open windows, but a musty chandelier jangles as the breeze from outside finds its way in.",
-                        "There's a dust coated Baby Grand in the corner, and you just can't help yourself..."]
+        sceneSetting = "The ballroom's dank and clearly hasn't been given any attention in decades. You can't see any open windows, but a musty chandelier jangles as the breeze from outside finds its way in. There's a dust coated Baby Grand in the corner, and you just can't help yourself..."
 
-        for i in range(len(sceneSetting)):
-            print(textwrap.fill(sceneSetting[i], 60))
+        print(textwrap.fill(sceneSetting, 60))
 
         time.sleep(5)
 
@@ -65,24 +76,90 @@ class Ballroom(Room):
 
         guess = Engine()
         guess.makeAGuess(playerCards, NPCCards, roomName)
+        guess.pickRoom()
 
 class Conservatory(Room):
-    pass
 
-class DiningRoom(Room):
-    pass
+    def enter(self):
+        print(f"\n.....................................\n")
+
+        sceneSetting = "Rain rattles the window panes throughout the Conservatory. What's usually a gentle, reassuring sound is broken by the occasional crack of thunder, and the shadows from lightning thrown across the room."
+
+        print(textwrap.fill(sceneSetting, 60))
+
+        time.sleep(5)
+
+        roomName = 'Conservatory'
+
+        guess = Engine()
+        guess.makeAGuess(playerCards, NPCCards, roomName)
+        guess.pickRoom()
 
 class Cellar(Room):
     pass
 
 class BilliardRoom(Room):
-    pass
+
+    def enter(self):
+        print(f"\n.....................................\n")
+
+        sceneSetting = "The Billiard Room is vast, with swathes of space largely unused - just a bar and a pool table right there in the center. Of course, you can't help yourself but take a cue...\n"
+
+        print(textwrap.fill(sceneSetting, 60))
+
+        time.sleep(5)
+
+        print(f"\n*THUNK*")
+
+        time.sleep(2)
+
+        print(f"\nStraight in the pocket.")
+
+        time.sleep(2)
+
+        print(f"\nLet's hope this case proves just as easy\n")
+
+        time.sleep(2)
+
+        roomName = 'Billiard Room'
+
+        guess = Engine()
+        guess.makeAGuess(playerCards, NPCCards, roomName)
+        guess.pickRoom()
 
 class Library(Room):
-    pass
+
+    def enter(self):
+        print(f"\n.....................................\n")
+
+        sceneSetting = "Mr. Body clearly had a lot of time on his hands, was extremely well read, or at the very least he wanted to look like he was. From floor to ceiling, books line the walls. The smell of mahogany and leather bound books fill the air, and the golden spines of books glisten from nearby candlelight."
+
+        print(textwrap.fill(sceneSetting, 60))
+
+        time.sleep(5)
+
+        roomName = 'Library'
+
+        guess = Engine()
+        guess.makeAGuess(playerCards, NPCCards, roomName)
+        guess.pickRoom()
 
 class Study(Room):
-    pass
+
+    def enter(self):
+        print(f"\n.....................................\n")
+
+        sceneSetting = "Mr. Body clearly had a lot of time on his hands, was extremely well read, or at the very least he wanted to look like he was. From floor to ceiling, books line the walls. The smell of mahogany and leather bound books fill the air, and the golden spines of books glisten from nearby candlelight."
+
+        print(textwrap.fill(sceneSetting, 60))
+
+        time.sleep(5)
+
+        roomName = 'Study'
+
+        guess = Engine()
+        guess.makeAGuess(playerCards, NPCCards, roomName)
+        guess.pickRoom()
 
 class Lobby(Room):
 
@@ -102,26 +179,36 @@ class Lobby(Room):
 
         time.sleep(1)
 
-        print(f"\nThere's a faint sound of footsteps approaching...")
+        print(f"\nThere's a faint sound of footsteps approaching...\n")
 
         time.sleep(3)
 
-        print(f"\nThe person who greets you has clearly seen better days. Aghast, dishevelled, beside themselves.\n")
+        butlerIntro = "The person who greets you has seen better days. Aghast, dishevelled, and clearly beside himself."
+        print(textwrap.fill(butlerIntro, 60))
 
         time.sleep(5)
 
-        print(f"BUTLER:")
+        print(f"\nBUTLER:")
 
         butlerDialogue = """Oh my - thank God you've arrived! I'm Jeeves, the butler at this fine establishment. There's been a terrible accident. You see, one of our guests... Mr. Body. He's been murdered! It's positively ghastly!\n"""
 
-        print(textwrap.fill(butlerDialogue, 60, initial_indent='        ', subsequent_indent='      '))
+        print(textwrap.fill(butlerDialogue, 60, initial_indent='       ', subsequent_indent='      '))
+
+        time.sleep(5)
+
+        print("\n")
+        playerCardsIntro = "You continue chatting with the butler for a while. He's withdrawn, and probably in shock, but it's a productive chat. Now you can rule out the following with some certainty:"
+        print(textwrap.fill(playerCardsIntro, 60))
+        print(f"\n{playerCards}")
+
+        print(f"\nThese are your cards. Make a note of them :)")
+
+        time.sleep(5)
 
         progress = input("\n> Are you ready to start investigating? Y/N\n")
 
         #options based on user input
         if progress == "Y":
-            print(f"\nYou have a private chat with the butler before going any further.\nYou can, with some certainty, rule out the following things:\n{playerCards}")
-            print(f"\nYou'll probably want to keep a note of these. They're your cards.")
             nextScene = Hallway(playerCards, NPCCards)
             nextScene.enter()
         elif progress == "N":
@@ -133,8 +220,6 @@ class Lobby(Room):
             print("That doesn't look quite right. Type Y or N")
             progress = input("> Are you ready to start investigating? Y/N\n")
             if progress == "Y":
-                print(f"\nYou have a private chat with the butler before going any further.\nYou can, with some certainty, rule out the following things:\n{playerCards}")
-                print(f"\nYou'll probably want to keep a note of these. They're your cards.")
                 nextScene = Hallway(playerCards, NPCCards)
                 nextScene.enter()
             else:
@@ -147,8 +232,8 @@ class Hallway(Room):
     def enter(self):
         print(f"\n.....................................\n")
 
-        hallwayIntros = ["The hallways are eerily silent, aside from the faint whispers of the guests. You have a job to do though, so you're pushing on.\n",
-                         "You head over to the hallway. The whole place has a stately air, but it's not welcoming in any way, shape or form. You'll be glad to leave this place soon.\n"]
+        hallwayIntros = ["The hallways are eerily silent, aside from the faint whispers of the guests. You tune them out for now, and you're pushing on.",
+                         "You head over to the hallway. The whole place has a stately air, but it's not welcoming in any way, shape or form. You'll be glad to leave this place soon."]
 
         intro = hallwayIntros[random.randint(0,len(hallwayIntros)-1)]
         print(textwrap.fill(intro, 60))
@@ -157,10 +242,38 @@ class Hallway(Room):
         nextRoom.pickRoom()
 
 class Lounge(Room):
-    pass
+
+    def enter(self):
+        print(f"\n.....................................\n")
+
+        sceneSetting = "As you approch the Lounge, there's a chorus of 'Shake, Rattle and Roll' ringing out from the record player. Just outside the door, you hear faint whispers from the night's suspects - this is where they're keeping themselves for the night. There's silence the second you walk in, and they watch you like a hawk as you look around."
+
+        print(textwrap.fill(sceneSetting, 60))
+
+        time.sleep(5)
+
+        roomName = 'Lounge'
+
+        guess = Engine()
+        guess.makeAGuess(playerCards, NPCCards, roomName)
+        guess.pickRoom()
 
 class DiningRoom(Room):
-    pass
+
+    def enter(self):
+        print(f"\n.....................................\n")
+
+        sceneSetting = "The smell from the Dining Room is glorious. The murder happened early in the evening, as not a single meal is finished. Candles lined along the dining table light the room, and you take a look around."
+
+        print(textwrap.fill(sceneSetting, 60))
+
+        time.sleep(5)
+
+        roomName = 'Dining Room'
+
+        guess = Engine()
+        guess.makeAGuess(playerCards, NPCCards, roomName)
+        guess.pickRoom()
 
 class Engine(object):
 
@@ -195,6 +308,8 @@ class Engine(object):
             nextRoom.enter()
 
     def makeAGuess(self, playerCards, NPCCards, roomName):
+        print(f"\n.....................................\n")
+        print(f"\nIt's time to make a guess.\n")
         #pass the dealt cards through
         self.playerCards = playerCards
         self.NPCCards = NPCCards
@@ -300,7 +415,7 @@ class setUpGame(object):
         playerCards = []
         NPCCards = []
 
-        numPlayers = range(int(input("> How many players do you want to play against? ")))
+        numPlayers = range(int(input("\n> How many players do you want to play against? ")))
 
         i = 0
 
@@ -324,7 +439,7 @@ class setUpGame(object):
         #print(f"{NPCCards}")
 
         print("Lovely!")
-        progress = input("> Ready to start? Type Y or N\n")
+        progress = input("\n> Ready to start? Type Y or N\n")
 
         if progress == "Y":
             print(f"\n.....................................\n")
