@@ -498,6 +498,7 @@ class setUpGame(object):
         playerCards = []
         NPCCards = []
 
+        #ask user for number of players, the number will be used to share out the cards to this number + 1 more (the player)
         numPlayers = input("\n> How many players do you want to play against? ")
 
         try:
@@ -515,6 +516,7 @@ class setUpGame(object):
 
         numPlayersRange = range(int(numPlayers))
 
+        #take a card out of the deck for the player, then take x number of cards out of the deck based on how users you wnated to play against
         while len(CluedoCards.characters) > i:
             playerCards.append(CluedoCards.characters.pop())
             for i in numPlayersRange:
@@ -531,6 +533,8 @@ class setUpGame(object):
                 NPCCards.append(CluedoCards.rooms.pop()) if CluedoCards.rooms else None
 
         print("Lovely!")
+
+        #Find out if the user wants to start, and some validation handling
         progress = input("\n> Ready to start? Type Y or N\n").upper()
 
         if progress == "Y":
